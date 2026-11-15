@@ -21,19 +21,24 @@ Egy egységes, hordozható kiegészítő készlet a Google Antigravity autonóm 
 
 ---
 
-## 🚀 Telepítés Másik Gépen
+## 🚀 Villámgyors Telepítés Másik Gépen (1 Soros Parancs)
 
-### Windows:
-Nyiss egy PowerShell terminált a klónozott mappában, és futtasd:
+### Windows (Git sem szükséges!):
+Nyiss egy normál PowerShell ablakot (Rendszergazdaként vagy simán), és másold be:
 ```powershell
+irm https://raw.githubusercontent.com/DBeni24/Antigravity-Setup/main/bootstrap.ps1 | iex
+```
+*Ez a parancs automatikusan letölti a csomagot a GitHub-ról, kicsomagolja a háttérben, és lefutatja a teljes konfigurációt (Node.js, uv, MCP szerverek, 23 skill).*
+
+---
+
+### Hagyományos Telepítés (Ha van Git a gépeden):
+
+```powershell
+git clone https://github.com/DBeni24/Antigravity-Setup.git
+cd Antigravity-Setup
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
-
-A szkript automatikusan:
-1. Ellenőrzi és beállítja a `uv` és `Node.js` környezetet
-2. Telepíti a globális MCP csomagokat (`agent-lsp`, `code-index-mcp`, `mcp-server-tree-sitter`)
-3. Átmásolja a skilleket, szabályokat és hookokat a `~/.gemini/config/` mappába
-4. Frissíti a felhasználói `PATH` környezeti változókat
 
 ### Linux / macOS / WSL:
 ```bash
