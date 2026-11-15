@@ -1,7 +1,7 @@
 $global:ErrorActionPreference = "Continue"
 
 Write-Host "=====================================================================" -ForegroundColor Cyan
-Write-Host "  🚀 Antigravity SOTA Toolkit - Gyors Telepito Letoltese..." -ForegroundColor Cyan
+Write-Host "  ?? Antigravity SOTA Toolkit - Gyors Telepito Letoltese..." -ForegroundColor Cyan
 Write-Host "=====================================================================" -ForegroundColor Cyan
 
 $tempZip = Join-Path $env:TEMP "Antigravity-Setup.zip"
