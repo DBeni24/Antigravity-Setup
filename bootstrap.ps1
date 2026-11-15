@@ -1,12 +1,13 @@
 $global:ErrorActionPreference = "Continue"
 
 Write-Host "=====================================================================" -ForegroundColor Cyan
-Write-Host "  Antigravity SOTA Toolkit - Gyors Telepito Letoltese..." -ForegroundColor Cyan
+Write-Host "  🚀 Antigravity SOTA Toolkit - Gyors Telepito Letoltese..." -ForegroundColor Cyan
 Write-Host "=====================================================================" -ForegroundColor Cyan
 
 $tempZip = Join-Path $env:TEMP "Antigravity-Setup.zip"
 $tempExtract = Join-Path $env:TEMP "Antigravity-Setup-Extract"
-$zipUrl = "https://github.com/DBeni24/Antigravity-Setup/archive/refs/heads/main.zip"
+$cacheBuster = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+$zipUrl = "https://github.com/DBeni24/Antigravity-Setup/archive/refs/heads/main.zip?t=$cacheBuster"
 
 Write-Host "`n[1/3] Csomag letoltese a GitHub-rol..." -ForegroundColor Yellow
 try {
