@@ -1,11 +1,11 @@
-﻿# ==============================================================================
+# ==============================================================================
 # Antigravity SOTA Toolkit - Automatikus Telepítő Szkript (Windows)
 # ==============================================================================
-# Használat:
-#   powershell -ExecutionPolicy Bypass -File .\install.ps1
-# ==============================================================================
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "SilentlyContinue"
+if (Test-Path variable:PSNativeCommandUseErrorActionPreference) {
+    $PSNativeCommandUseErrorActionPreference = $false
+}
 
 Write-Host "=====================================================================" -ForegroundColor Cyan
 Write-Host "  🚀 Antigravity SOTA Toolkit Telepítése és Konfigurálása" -ForegroundColor Cyan
@@ -25,7 +25,7 @@ $dirs = @(
 )
 foreach ($d in $dirs) {
     if (-not (Test-Path $d)) {
-        New-Item -ItemType Directory -Path $d -Force | Out-Null
+        New-Item -ItemType Directory -Path $d -Force -ErrorAction SilentlyContinue | Out-Null
     }
 }
 Write-Host "  -> Könyvtárak kész." -ForegroundColor Green
@@ -34,7 +34,7 @@ Write-Host "  -> Könyvtárak kész." -ForegroundColor Green
 Write-Host "`n[2/6] 'uv' ellenőrzése..." -ForegroundColor Yellow
 if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
     Write-Host "  -> 'uv' nincs telepítve. Letöltés és telepítés..." -ForegroundColor Cyan
-    powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+    powershell -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/install.ps1 | iex" 2>$null
     $env:PATH = "$userProfile\.local\bin;" + $env:PATH
 } else {
     Write-Host "  -> 'uv' elérhető: $(uv --version)" -ForegroundColor Green
@@ -43,14 +43,13 @@ if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
 # 3. Node.js & npm ellenőrzése
 Write-Host "`n[3/6] Node.js és npm ellenőrzése..." -ForegroundColor Yellow
 if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
-    # Ellenőrizzük a Program Files-ban
     $defaultNode = "C:\Program Files\nodejs\node.exe"
     if (Test-Path $defaultNode) {
         $env:PATH = "C:\Program Files\nodejs;$userProfile\AppData\Roaming\npm;" + $env:PATH
-        Write-Host "  -> Node.js megtalálva a Program Files-ban és hozzáadva a PATH-hoz." -ForegroundColor Green
+        Write-Host "  -> Node.js megtalálva és hozzáadva a PATH-hoz." -ForegroundColor Green
     } else {
         Write-Host "  -> Node.js nem található. Telepítés winget segítségével..." -ForegroundColor Cyan
-        winget install OpenJS.NodeJS.LTS --silent --accept-package-agreements --accept-source-agreements
+        cmd /c "winget install OpenJS.NodeJS.LTS --silent --accept-package-agreements --accept-source-agreements" 2>$null
         $env:PATH = "C:\Program Files\nodejs;$userProfile\AppData\Roaming\npm;" + $env:PATH
     }
 } else {
@@ -58,21 +57,36 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 }
 
 # 4. Globális MCP Csomagok telepítése
-Write-Host "`n[4/6] MCP Szerverek és Kódintelligencia telepítése..." -ForegroundColor Yellow
+Write-Host "`n[4/6] MCP Szerverek és Kódintelligencia ellenőrzése..." -ForegroundColor Yellow
 
 # 4.1 agent-lsp (npm)
-Write-Host "  -> agent-lsp telepítése npm-mel..." -ForegroundColor Cyan
-npm install -g @blackwell-systems/agent-lsp 2>$null | Out-Null
-Write-Host "     agent-lsp telepítve." -ForegroundColor Green
+$agentLspPath = "$userProfile\AppData\Roaming\npm\agent-lsp.cmd"
+if (-not (Test-Path $agentLspPath)) {
+    Write-Host "  -> agent-lsp telepítése npm-mel..." -ForegroundColor Cyan
+    cmd /c "npm install -g @blackwell-systems/agent-lsp 2>nul"
+    Write-Host "     agent-lsp telepítve." -ForegroundColor Green
+} else {
+    Write-Host "  -> agent-lsp már telepítve van." -ForegroundColor Green
+}
 
 # 4.2 Python MCP eszközök (uv tool)
-Write-Host "  -> code-index-mcp telepítése uv-val..." -ForegroundColor Cyan
-uv tool install code-index-mcp --python 3.12 --force 2>$null | Out-Null
-Write-Host "     code-index-mcp telepítve." -ForegroundColor Green
+$codeIndexPath = "$userProfile\.local\bin\code-index-mcp.exe"
+if (-not (Test-Path $codeIndexPath)) {
+    Write-Host "  -> code-index-mcp telepítése uv-val..." -ForegroundColor Cyan
+    cmd /c "uv tool install code-index-mcp --python 3.12 2>nul"
+    Write-Host "     code-index-mcp telepítve." -ForegroundColor Green
+} else {
+    Write-Host "  -> code-index-mcp már telepítve van." -ForegroundColor Green
+}
 
-Write-Host "  -> mcp-server-tree-sitter telepítése uv-val..." -ForegroundColor Cyan
-uv tool install mcp-server-tree-sitter --python 3.12 --with "mcp<2" --force 2>$null | Out-Null
-Write-Host "     mcp-server-tree-sitter telepítve." -ForegroundColor Green
+$treeSitterPath = "$userProfile\.local\bin\mcp-server-tree-sitter.exe"
+if (-not (Test-Path $treeSitterPath)) {
+    Write-Host "  -> mcp-server-tree-sitter telepítése uv-val..." -ForegroundColor Cyan
+    cmd /c "uv tool install mcp-server-tree-sitter --python 3.12 --with `"mcp<2`" 2>nul"
+    Write-Host "     mcp-server-tree-sitter telepítve." -ForegroundColor Green
+} else {
+    Write-Host "  -> mcp-server-tree-sitter már telepítve van." -ForegroundColor Green
+}
 
 # 5. Skillek, Szabályok és Hookok másolása
 Write-Host "`n[5/6] Skillek, Szabályzat és Hookok integrálása..." -ForegroundColor Yellow
