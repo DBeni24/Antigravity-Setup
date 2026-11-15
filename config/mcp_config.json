@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "agent-lsp": {
+      "command": "C:\\Users\\HP\\AppData\\Roaming\\npm\\agent-lsp.cmd",
+      "args": [],
+      "env": {
+        "PATH": "C:\\Program Files\\nodejs;C:\\Users\\HP\\AppData\\Roaming\\npm;C:\\Users\\HP\\.local\\bin;%PATH%",
+        "AGENT_LSP_LOG_LEVEL": "warn"
+      }
+    },
+    "code-index": {
+      "command": "C:\\Users\\HP\\.local\\bin\\code-index-mcp.exe",
+      "args": []
+    },
+    "tree-sitter": {
+      "command": "C:\\Users\\HP\\.local\\bin\\mcp-server-tree-sitter.exe",
+      "args": []
+    },
+    "playwright": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--headless"
+      ],
+      "env": {
+        "PATH": "C:\\Program Files\\nodejs;C:\\Users\\HP\\AppData\\Roaming\\npm;%PATH%"
+      }
+    }
+  }
+}
