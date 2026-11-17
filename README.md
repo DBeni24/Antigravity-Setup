@@ -2,6 +2,12 @@
 
 Egy egységes, hordozható kiegészítő készlet a Google Antigravity autonóm kódolási környezethez. Tartalmazza a mélykutatás alapján összeállított összes képességnövelő modult, szabályzatot, hookot és MCP szerver konfigurációt.
 
+## Használati cél
+
+A repó célja, hogy a tulajdonos a Google Antigravity toolkészletét több saját
+eszközén könnyen szinkronizálhassa és egységesen használhassa. Ez fejlesztői
+eszközkonfiguráció, nem egy adott alkalmazás futtatási függősége vagy forrása.
+
 ---
 
 ## 📦 Tartalom
